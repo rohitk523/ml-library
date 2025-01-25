@@ -54,7 +54,7 @@ class _UploadScreenState extends State<UploadScreen> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'http://127.0.0.1:8000/predict_digit'), // Replace with your URL
+            'http://127.0.0.1:8000/predict_digit/'), // Replace with your URL
       );
 
       if (kIsWeb) {

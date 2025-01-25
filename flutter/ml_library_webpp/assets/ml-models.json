@@ -1,0 +1,6 @@
+{
+    "samples": [
+      {"id": 1, "title": "Digit Recognition"},
+      {"id": 2, "title": "Image Classification"}
+    ]
+}

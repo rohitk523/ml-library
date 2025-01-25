@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ml_library_webpp/screens/uploadscreen.dart';
 import 'screens/sample1_screen.dart';
 
@@ -23,35 +26,53 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<dynamic> samples = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadSamples();
+  }
+
+  Future<void> loadSamples() async {
+    String data = await rootBundle
+        .loadString('assets/ml-models.json'); // Remove extra 'assets/'
+    setState(() {
+      samples = json.decode(data)['samples'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Home Page"),
-      ),
+      appBar: AppBar(title: Text("Home Page")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.count(
           crossAxisCount: 3,
           crossAxisSpacing: 16.0,
           mainAxisSpacing: 16.0,
-          children: List.generate(9, (index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/sample${index + 1}');
-              },
-              child: Container(
-                color: Colors.blue,
-                child: Center(
-                  child: Text(
-                    'Sample ${index + 1}',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              ),
-            );
-          }),
+          children: samples
+              .map((sample) => GestureDetector(
+                    onTap: () =>
+                        Navigator.pushNamed(context, '/sample${sample['id']}'),
+                    child: Container(
+                      color: Colors.blue,
+                      child: Center(
+                        child: Text(
+                          sample['title'],
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    ),
+                  ))
+              .toList(),
         ),
       ),
     );
